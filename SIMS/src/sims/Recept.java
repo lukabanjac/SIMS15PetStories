@@ -1,12 +1,11 @@
 package sims;
 
 import java.util.List;
-import java.util.Map;
 
 public class Recept {
 	private Integer id;
 	private String naziv;
-	private List<Sastojak> potrebni_sastojci; //int je 0 ako nije kljucni sastojak 1 ako jeste
+	private List<Sastojak> potrebni_sastojci; 
 	private String priprema;
 	private List<Oprema> potrebna_oprema;
 	private User kreirao;		//null ako je admin
@@ -15,6 +14,8 @@ public class Recept {
 	private Integer vreme;
 	private List<String> komentari;
 	private List<String> ocene;
+	
+	
 	public Recept(Integer id, String naziv, List<Sastojak> potrebni_sastojci, String priprema,
 			List<Oprema> potrebna_oprema, User kreirao, Vrsta vr, Integer posno, Integer vreme, List<String> komentari,
 			List<String> ocene) {

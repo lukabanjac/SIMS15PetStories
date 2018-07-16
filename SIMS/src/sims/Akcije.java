@@ -3,20 +3,20 @@ package sims;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
 
 import javax.swing.*;
 
 public class Akcije {
-	private static int i=0;
 
 	public static void do_login(JFrame login_win, JFrame parent)  
 	{  
@@ -186,6 +186,40 @@ public class Akcije {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		
+	}
+	public static void updateKorisnika(List<Sastojak> sastojci, List<Oprema> oprema) {
+		String old="";
+		String new_line = "";
+		for(User u:Main.mapa_korisnika){
+			if(u.equals(Main.ulogovan)){
+				old = u.toString();
+				u.setOprema(oprema);
+				u.setSastojci(sastojci);
+				new_line = u.toString();
+			}
+		}
+		
+		Path path = Paths.get("Fajlovi\\Korisnici.txt");
+		List<String> fileContent=new ArrayList<>();
+		try {
+			fileContent = Files.readAllLines(path);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+
+		for (int i = 0; i < fileContent.size(); i++) {
+		    if (fileContent.get(i).equals(old)) {
+		        fileContent.set(i, new_line);
+		        break;
+		    }
+		}
+
+		try {
+			Files.write(path, fileContent);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 	}
 };

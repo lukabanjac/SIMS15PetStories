@@ -21,5 +21,9 @@ public class Oprema {
 		this.naziv = naziv;
 	}
 	
+	@Override
+	public String toString() {
+		return getNaziv()+" ";
+	}
 	
 }

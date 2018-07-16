@@ -3,13 +3,8 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import sims.Window;
 
@@ -17,12 +12,14 @@ import sims.Window;
 
 public class Main {
 	
-	//public static ArrayList<User> korisnici = new ArrayList<User>();
+	
 	public static ArrayList<Sastojak> sastojci = ucitajSastojke();
 	public static ArrayList<Oprema> oprema = ucitajOpremu();
 	public static ArrayList<Recept> recepti = ucitajRecepte(sastojci, oprema);
 	public static ArrayList<User> mapa_korisnika = ucitajKorisnike();
 	public static User ulogovan;
+	public static List<Oprema> privremena_oprema = new ArrayList<Oprema>();
+	public static List<Sastojak> privremeni_sastojci = new ArrayList<Sastojak>();
 	
 	
 	public static void main(String[] args) {
@@ -179,7 +176,7 @@ public class Main {
 		    	
 		    	Vrsta vrsta=null;
 		    	for(Vrsta v: Vrsta.values()){
-		    		if(v.name()==rec[6]){
+		    		if(v.name().equals(rec[6])){
 		    			vrsta=v;
 		    		}
 		    	}

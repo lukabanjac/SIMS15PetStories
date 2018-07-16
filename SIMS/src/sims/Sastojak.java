@@ -22,5 +22,8 @@ public class Sastojak {
 		this.sifra = sifra;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return getNaziv()+" ";
+	}
 }
