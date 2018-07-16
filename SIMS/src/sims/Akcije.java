@@ -5,6 +5,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -53,22 +58,27 @@ public class Akcije {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				boolean found = false;
-			       /*for(Map.Entry<String, User> pair : mapa_korisnika.entrySet()) {
-			    	    if(pair.getKey()==korisnicko.getText()){
-			    	    	if(pair.getValue().getPassword()!=String.valueOf(password.getPassword())){
+				boolean f=false;
+			       for(User u : Main.mapa_korisnika) {
+			    	    if(u.getUsername().equals(korisnicko.getText())){
+			    	    	String passText = new String(password.getPassword());
+			    	    	if(!(u.getPassword().equals(passText))){
 			    	    		JOptionPane.showMessageDialog(null, "Incorrect password!", "Warning", JOptionPane.WARNING_MESSAGE); 
+			    	    		f=true;
+			    	    		break;
 			    	    	}
 			    	    	else{
+			    	    	Main.ulogovan =u;
 			    	    	found=true;
 			    	    	break;
 			    	    	}
 			    	    }
-			    	}*/
+			    	}
 			       
-			       if(!found){
+			       if(!f && !found){
 			    	   JOptionPane.showMessageDialog(null, "Incorrect username and password", "Wrong!", JOptionPane.INFORMATION_MESSAGE); 
 			       }
-			       else{
+			       else if(found){
 			    	   parent.dispose();
 			    	   new Window(0);
 			    	   
@@ -131,13 +141,13 @@ public class Akcije {
 	     register_win.add(panel);
 	     
 	     
-	     /*registerButton.addActionListener(new ActionListener() {
+	     registerButton.addActionListener(new ActionListener() {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					boolean found = false;
-				       for(Map.Entry<String, User> pair : mapa_korisnika.entrySet()) {
-				    	    if(pair.getKey()==username.getText()){
+				       for(User u : Main.mapa_korisnika) {
+				    	    if(u.getUsername().equals(username.getText())){
 				    	    	found=true;
 				    	    	break;
 				    	    }
@@ -148,13 +158,34 @@ public class Akcije {
 				    	   JOptionPane.showMessageDialog(null, "Username already exists!", "Wrong!", JOptionPane.INFORMATION_MESSAGE); 
 				       }
 				       else{
-				    	   User u = new User(ime.getText(), prezime.getText(), username.getText(), String.valueOf(password.getPassword()),0,0,null,null,null,null);
-				   	       mapa_korisnika.put(username.getText(), u);
+				    	   List<Sastojak> sastojci = new ArrayList<>();
+				    	   List<Oprema> oprema = new ArrayList<>();
+				    	   List<Recept> bookmark = new ArrayList<>();
+				    	   List<Recept> unetiRecepti = new ArrayList<>();
+				    	   User u = new User(ime.getText(), prezime.getText(), username.getText(), String.valueOf(password.getPassword()),0,0,sastojci, oprema, bookmark,unetiRecepti);
+				   	       Main.mapa_korisnika.add(u);
+				   	       Main.ulogovan = u;
+				   	       dodajKorisnika(u);
 				    	   parent.dispose();
 				    	   new Window(0);
 				    	   
 				       }
 				} 
-			});*/
+			});
+	}
+	protected static void dodajKorisnika(User u) {
+		try(FileWriter fw = new FileWriter("Fajlovi\\Korisnici.txt", true);
+			    BufferedWriter bw = new BufferedWriter(fw);
+			    PrintWriter out = new PrintWriter(bw))
+			{
+				String a = u.toString();
+			    out.println(a);
+			 
+			    
+			    
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		
 	}
 };

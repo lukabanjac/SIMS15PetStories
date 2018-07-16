@@ -1,11 +1,14 @@
 package sims;
 import javax.swing.*;
+import javax.swing.event.CellEditorListener;
+
 import java.awt.*;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.lang.String;
 import sims.Akcije.*;
+import java.lang.Math;
 
 public class Window {
 	private JFrame f;
@@ -45,7 +48,7 @@ public class Window {
 	
 	
 	public void neulogovan(){
-		f = new JFrame("Kad si gladan nisi sav svoj");
+		f = new JFrame("Dine");
 		f.setVisible(true);
 		f.setSize(700, 600);
 		f.setResizable(true);
@@ -58,8 +61,8 @@ public class Window {
 		login.setFont(new Font(login.getName(), Font.PLAIN, 18));
 		register = new JLabel("   Register");
 		register.setFont(new Font(register.getName(), Font.PLAIN, 18));
-		grid = new CheckBoxGrid(5, 5, "Sastojci", 0);
-		grid2 = new CheckBoxGrid(5, 5, "Oprema", 0);
+		grid = new CheckBoxGrid("Sastojci", 0);
+		grid2 = new CheckBoxGrid("Oprema", 0);
 		oprema = new JPanel();
 		sastojci = new JPanel();
 		trazi = new JButton("Pretrazi");
@@ -102,7 +105,7 @@ public class Window {
 		
 	}
 	public void ulogovan(){
-		f = new JFrame("Kad si gladan nisi sav svoj");
+		f = new JFrame("Dine");
 		f.setVisible(true);
 		f.setSize(700, 600);
 		f.setResizable(true);
@@ -113,8 +116,8 @@ public class Window {
 		f.setContentPane(glavni);
 		logout = new JLabel("Logout");
 		logout.setFont(new Font(logout.getName(), Font.PLAIN, 18));
-		grid = new CheckBoxGrid(5, 5, "Sastojci",1);
-		grid2 = new CheckBoxGrid(5, 5, "Oprema",1);
+		grid = new CheckBoxGrid("Sastojci",1);
+		grid2 = new CheckBoxGrid("Oprema",1);
 		oprema = new JPanel();
 		sastojci = new JPanel();
 		trazi = new JButton("Pretrazi");
@@ -126,23 +129,23 @@ public class Window {
 		log.add(podpanel, BorderLayout.EAST);
 	
 		
-		/*tabovi = new JTabbedPane();
+		tabovi = new JTabbedPane();
 		oprema.setLayout(new GridLayout());
-		oprema.add(grid);
+		oprema.add(grid2);
 		sastojci.setLayout(new GridLayout());
-		sastojci.add(grid2);
+		sastojci.add(grid);
 		tabovi.addTab("Sastojci", sastojci);
 		tabovi.addTab("Oprema", oprema);
 	
 		
 		opcija = new JPanel();
 		opcija.setLayout(new FlowLayout());
-		opcija.add(trazi);*/
+		opcija.add(trazi);
 		
 
 		glavni.add(log, BorderLayout.NORTH);
-		//glavni.add(tabovi, BorderLayout.CENTER);
-		//glavni.add(opcija, BorderLayout.SOUTH);
+		glavni.add(tabovi, BorderLayout.CENTER);
+		glavni.add(opcija, BorderLayout.SOUTH);
 		
 		
 		
@@ -150,29 +153,38 @@ public class Window {
 	
 	
 	class CheckBoxGrid extends JPanel {
-		   private static final int redovi = 5;		//izracunati iz sastojaka kolone su uvek 10 a redovi ceil(listofingred.size()/10) :)
-		   private static final int kolone = 10;
-		   private static final int GAP = -5;
-		   private JCheckBox[][] checkBoxes = new JCheckBox[redovi][kolone];
+		   
+		   private final int koloneS = (int) Math.ceil(Main.sastojci.size()/10.0);		//izracunati iz sastojaka kolone su uvek 10 a redovi ceil(listofingred.size()/10) :)
+		   private final int koloneO = (int) Math.ceil(Main.oprema.size()/10.0);
+		   private final int redovi = 10;
+		   private final int GAP = -5;
+		   private JCheckBox[][] checkBoxes = new JCheckBox[redovi][koloneS];
+		   private JCheckBox[][] checkBoxes1 = new JCheckBox[redovi][koloneO];
 		   private ItemListener itemListener;
-		   private int row;
-		   private int col;
+		   
 
-		   public CheckBoxGrid(int row, int col, String naziv, int log) { //log je 0 ako je neulogovan 1 ako logovani menja da bi bili
+		   public CheckBoxGrid(String naziv, int log) { //log je 0 ako je neulogovan 1 ako logovani menja da bi bili
 			   															  //check oni koje ima vec
-		      this.row = row;
-		      this.col = col;
+		
 		      setBorder(BorderFactory.createTitledBorder(naziv));
-		      setLayout(new GridLayout(redovi, kolone, GAP, GAP));
+		      if(naziv=="Sastojci"){
+		    	  setLayout(new GridLayout(redovi, koloneS, GAP, GAP));
+		      
+		      
 		      int i = 0;
 		      if(log==0){
+		    	  
 		    	  for (int cbRow = 0; cbRow < checkBoxes.length; cbRow++) {
 		    		  for (int cbCol = 0; cbCol < checkBoxes[cbRow].length; cbCol++) {
+		    			  
 		    			  JCheckBox checkBox = new JCheckBox();
-				          checkBox.setText(String.valueOf(i));			//ovde staviti iz liste sastojaka i-ti element
+				          checkBox.setText(Main.sastojci.get(i).getNaziv());			//ovde staviti iz liste sastojaka i-ti element
 				          checkBox.addItemListener(itemListener);
 				          add(checkBox);
 				          checkBoxes[cbRow][cbCol] = checkBox;
+				          if(i==Main.sastojci.size()-1){
+		    				  return;
+		    			  }
 				          i++;
 				         }
 				  }
@@ -181,21 +193,70 @@ public class Window {
 		    	  for (int cbRow = 0; cbRow < checkBoxes.length; cbRow++) {
 		    		  for (int cbCol = 0; cbCol < checkBoxes[cbRow].length; cbCol++) {
 		    			  JCheckBox checkBox = new JCheckBox();
-				          checkBox.setText(String.valueOf(i));			//ovde staviti iz liste sastojaka i-ti element
-				          /*for(int j=0; i<lista_sastojaka_korisnika.size();i++){
-				        	  if (lista_sastojaka[i]==lista_sastojaka_korisnika[j]){
+				          checkBox.setText(Main.sastojci.get(i).getNaziv());			//ovde staviti iz liste sastojaka i-ti element
+				          for(int j=0; j<Main.ulogovan.getSastojci().size();j++){
+				        	  if (Main.sastojci.get(i).equals(Main.ulogovan.getSastojci().get(j))){
 				        		  checkBox.setSelected(true);
 				        		  break;
 				        	  }
-				          }*/
+				          }
 				          checkBox.addItemListener(itemListener);
 				          add(checkBox);
 				          checkBoxes[cbRow][cbCol] = checkBox;
+				          if(i==Main.sastojci.size()-1){
+		    				  return;
+		    			  }
 				          i++;
 				         }
 				  }
 		      }
-		     
+		   }
+		      
+		      else{
+		    	  setLayout(new GridLayout(redovi, koloneO, GAP, GAP));
+			      
+			      
+			      int i = 0;
+			      if(log==0){
+			    	  
+			    	  for (int cbRow = 0; cbRow < checkBoxes.length; cbRow++) {
+			    		  for (int cbCol = 0; cbCol < checkBoxes[cbRow].length; cbCol++) {
+			    			  JCheckBox checkBox = new JCheckBox();
+					          checkBox.setText(Main.oprema.get(i).getNaziv());			//ovde staviti iz liste sastojaka i-ti element
+					          checkBox.addItemListener(itemListener);
+					          add(checkBox);
+					          checkBoxes[cbRow][cbCol] = checkBox;
+					          if(i==Main.oprema.size()-1){
+			    				  return;
+			    			  }
+					          i++;
+					         }
+					  }
+			      }
+			      else{
+			    	  for (int cbRow = 0; cbRow < checkBoxes.length; cbRow++) {
+			    		  for (int cbCol = 0; cbCol < checkBoxes[cbRow].length; cbCol++) {
+			    			  JCheckBox checkBox = new JCheckBox();
+					          checkBox.setText(Main.oprema.get(i).getNaziv());			//ovde staviti iz liste sastojaka i-ti element
+					          for(int j=0; j<Main.ulogovan.getOprema().size();j++){
+					        	  if (Main.oprema.get(i).equals(Main.ulogovan.getOprema().get(j))){
+					        		  checkBox.setSelected(true);
+					        		  break;
+					        	  }
+					          }
+					          checkBox.addItemListener(itemListener);
+					          add(checkBox);
+					          checkBoxes[cbRow][cbCol] = checkBox;
+					          if(i==Main.oprema.size()-1){
+			    				  return;
+			    			  }
+					          i++;
+					         }
+					  }
+			      }
+			   
+		    	  
+		      }
 		   }
 	}
 

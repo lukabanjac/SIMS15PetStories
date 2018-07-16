@@ -9,14 +9,14 @@ public class User {
 	private String password;
 	private int type;		//0-obican, 1-premium
 	private int bodovi;
-	private List<String> sastojci;
-	private List<String> oprema;
+	private List<Sastojak> sastojci;
+	private List<Oprema> oprema;
 	private List<Recept> bookmark;
 	private List<Recept> unetiRecepti;
 	
 	
 	public User(String ime, String prezime, String username, String password, int type, int bodovi,
-			List<String> sastojci, List<String> oprema, List<Recept> bookmark, List<Recept> unetiRecepti) {
+			List<Sastojak> sastojci, List<Oprema> oprema, List<Recept> bookmark, List<Recept> unetiRecepti) {
 		super();
 		this.ime = ime;
 		this.prezime = prezime;
@@ -65,16 +65,16 @@ public class User {
 	public void setBodovi(int bodovi) {
 		this.bodovi = bodovi;
 	}
-	public List<String> getSastojci() {
+	public List<Sastojak> getSastojci() {
 		return sastojci;
 	}
-	public void setSastojci(List<String> sastojci) {
+	public void setSastojci(List<Sastojak> sastojci) {
 		this.sastojci = sastojci;
 	}
-	public List<String> getOprema() {
+	public List<Oprema> getOprema() {
 		return oprema;
 	}
-	public void setOprema(List<String> oprema) {
+	public void setOprema(List<Oprema> oprema) {
 		this.oprema = oprema;
 	}
 	public List<Recept> getBookmark() {
@@ -90,6 +90,57 @@ public class User {
 		this.unetiRecepti = unetiRecepti;
 	}
 	
+	
+	@Override
+	public String toString() {
+		String sastojci_s = "",oprema_s="",bookmark_s="",uneti_s="";
+		if(getSastojci().size()==0){
+			sastojci_s = "-1";
+		}
+		for(int i=0; i<getSastojci().size(); i++){
+			if(i!=getSastojci().size()-1){
+				sastojci_s+=getSastojci().get(i).getSifra().toString()+",";
+			}
+			else{
+				sastojci_s+=getSastojci().get(i).getSifra().toString();
+			}
+		}
+		if(getOprema().size()==0){
+			oprema_s = "-1";
+		}
+		for(int i=0; i<getOprema().size(); i++){
+			if(i!=getOprema().size()-1){
+				oprema_s+=getOprema().get(i).getId().toString()+",";
+			}
+			else{
+				oprema_s+=getOprema().get(i).getId().toString();
+			}
+		}
+		if(getBookmark().size()==0){
+			bookmark_s = "-1";
+		}
+		for(int i=0; i<getBookmark().size(); i++){
+			if(i!=getBookmark().size()-1){
+				bookmark_s+=getBookmark().get(i).getId().toString()+",";
+			}
+			else{
+				bookmark_s+=getBookmark().get(i).getId().toString();
+			}
+		}
+		if(getUnetiRecepti().size()==0){
+			uneti_s = "-1";
+		}
+		for(int i=0; i<getUnetiRecepti().size(); i++){
+			if(i!=getUnetiRecepti().size()-1){
+				uneti_s+=getUnetiRecepti().get(i).getId().toString()+",";
+			}
+			else{
+				uneti_s+=getUnetiRecepti().get(i).getId().toString();
+			}
+		}
+		return getIme()+"|"+getPrezime()+"|"+getUsername()+"|"+getPassword()+"|"+getType()+"|"+
+		getBodovi()+"|"+sastojci_s+"|"+oprema_s+"|"+bookmark_s+"|"+uneti_s;
+	}
 	
 	
 
