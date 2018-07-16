@@ -1,0 +1,15 @@
+0|mleko
+1|jaja
+2|brasno
+3|jaffa
+4|prasak za pecivo
+5|secer
+6|cokolada za kuvanje
+7|slatka pavlaka
+8|ulje
+9|so
+10|lisnato testo
+11|slanina
+12|jogurt
+13|mak
+14|susam
